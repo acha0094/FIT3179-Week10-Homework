@@ -3,36 +3,100 @@
     "title": "Malaysia COVID-19 Total Deaths as of 19 September 2022",
     "width": 800,
     "height": 400,
-    "projection": {"type": "mercator"},
-    "data": {
-      "url": "js/malaysia.json",
-      "format": {"type": "topojson", "feature": "states"}
-    },
-    "transform": [
+    "params": [
         {
-            "lookup": "properties.Name",
-            "from": {
-                "data": {
-                    "url": "data/epidemic/total_deaths_state.csv"
-                },
-                "key": "state",
-                "fields": ["total_deaths", "population"]
+            "name": "zoom_level",
+            "value": 2800,
+            "bind": {
+                "input": "range",
+                "min": 2800,
+                "max": 15000,
+                "step": 100,
+                "name": "Zoom: "
             }
         },
-        {"calculate": "datum.total_deaths/datum.population * 10000", "as": "Deaths per 10,000 Population"}
-    ],
-    "mark": {"type": "geoshape"},
-    "encoding": {
-        "color": {
-            "field": "Deaths per 10,000 Population",
-            "type": "quantitative",
-            "scale": {"type": "log"}
+        {
+            "name": "center_to",
+            "value": [108.26, 4],
+            "bind": {
+                "input": "select",
+                "options": [
+                    [108.26, 4],
+                    [101.8, 3],
+                    [111.8, 4.8]
+                ],
+                "labels": ["Malaysia", "Kuala Lumpur", "East Malaysia"],
+                "name": "Map Centre: "
+            }
         },
-        "tooltip": [
-            {"field": "properties.Name", "type": "nominal", "title": "State"},
-            {"field": "population", "type": "quantitative", "title": "Population"},
-            {"field": "total_deaths", "type": "quantitative", "title": "Total Deaths"},
-            {"field": "Deaths per 10,000 Population", "type": "quantitative", "format": ".2f"}
-        ]
-    }
+        {
+            "name": "Deaths_Above",
+            "value": 0,
+            "bind": {
+                "input": "range",
+                "min": 0,
+                "max": 10000,
+                "step": 500,
+                "name": "Minimum Deaths: "
+            }
+        }
+            
+    ],
+    "projection": {
+        "type": "mercator",
+        "center": {"expr": "center_to"},
+        "scale": {"expr": "zoom_level"}
+    },
+    "layer": [
+        {
+            "data": {
+                "url": "js/malaysia.json",
+                "format": {"type": "topojson", "feature": "states"}
+            },
+            "mark": {
+                "type": "geoshape",
+                "fill": "white",
+                "stroke": "black",
+                "strokeWidth": 0.4
+            }
+        },
+        {
+            "data": {
+                "url": "js/malaysia.json",
+                "format": {"type": "topojson", "feature": "states"}
+            },
+            "transform": [
+                {
+                    "lookup": "properties.Name",
+                    "from": {
+                        "data": {
+                            "url": "data/epidemic/total_deaths_state.csv"
+                        },
+                        "key": "state",
+                        "fields": ["total_deaths", "population"]
+                    }
+                },
+                {"calculate": "datum.total_deaths/datum.population * 10000", "as": "Deaths per 10,000 Population"},
+                {"filter": "datum.total_deaths > Deaths_Above"}
+            ],
+            "mark": {
+                "type": "geoshape",
+                "stroke": "black",
+                "strokeWidth": 0.4
+            },
+            "encoding": {
+                "color": {
+                    "field": "Deaths per 10,000 Population",
+                    "type": "quantitative",
+                    "scale": {"type": "log"}
+                },
+                "tooltip": [
+                    {"field": "properties.Name", "type": "nominal", "title": "State"},
+                    {"field": "population", "type": "quantitative", "title": "Population"},
+                    {"field": "total_deaths", "type": "quantitative", "title": "Total Deaths"},
+                    {"field": "Deaths per 10,000 Population", "type": "quantitative", "format": ".2f"}
+                ]
+            }
+        }
+    ]
 }
