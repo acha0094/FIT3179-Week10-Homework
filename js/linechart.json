@@ -10,7 +10,7 @@
                 "x": {
                     "field": "date", 
                     "type": "temporal", 
-                    "title": "Date",
+                    "title": "",
                     "scale": {"domain": {"param": "brush"}}
                 }
             },
@@ -142,12 +142,7 @@
                 }
             ],
             "encoding": {
-                "x": {"field": "date", "type": "temporal"},
-                "y": {
-                    "field": "price",
-                    "type": "quantitative",
-                    "axis": {"tickCount": 3, "grid": false}
-                }
+                "x": {"field": "date", "type": "temporal", "title": "Date"}
             }
         }
     ]
