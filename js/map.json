@@ -47,6 +47,24 @@
         "center": {"expr": "center_to"},
         "scale": {"expr": "zoom_level"}
     },
+    "data": {
+        "url": "js/malaysia.json",
+        "format": {"type": "topojson", "feature": "states"}
+    },
+    "transform": [
+        {
+            "lookup": "properties.Name",
+            "from": {
+                "data": {
+                    "url": "data/epidemic/total_deaths_state.csv"
+                },
+                "key": "state",
+                "fields": ["total_deaths", "population"]
+            }
+        },
+        {"calculate": "datum.total_deaths/datum.population * 10000", "as": "Deaths per 10,000 Population"},
+        {"filter": "datum.total_deaths > Deaths_Above"}
+    ],
     "layer": [
         {
             "data": {
@@ -61,24 +79,6 @@
             }
         },
         {
-            "data": {
-                "url": "js/malaysia.json",
-                "format": {"type": "topojson", "feature": "states"}
-            },
-            "transform": [
-                {
-                    "lookup": "properties.Name",
-                    "from": {
-                        "data": {
-                            "url": "data/epidemic/total_deaths_state.csv"
-                        },
-                        "key": "state",
-                        "fields": ["total_deaths", "population"]
-                    }
-                },
-                {"calculate": "datum.total_deaths/datum.population * 10000", "as": "Deaths per 10,000 Population"},
-                {"filter": "datum.total_deaths > Deaths_Above"}
-            ],
             "mark": {
                 "type": "geoshape",
                 "stroke": "black",
