@@ -68,7 +68,7 @@
                         "y": {
                             "field": "deaths_new",
                             "type": "quantitative",
-                            "title": "Daily Deaths"
+                            "title": "Daily Number of Deaths"
                         },
                         "color": {
                             "field": "state",
