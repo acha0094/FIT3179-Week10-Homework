@@ -1,6 +1,10 @@
 {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "title": "Malaysia COVID-19 Daily Deaths",
+    "title": {
+        "text": "Malaysia COVID-19 Daily Deaths",
+        "align": "center",
+        "anchor": "middle"
+    },
     "data": {"url": "data/epidemic/deaths_state.csv"},
     "vconcat": [
         {
