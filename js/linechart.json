@@ -1,5 +1,123 @@
 {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "title": "Malaysia COVID-19 Total Deaths as of 19 September 2022",
+    "title": "Malaysia COVID-19 Daily Deaths",
     "width": 800,
     "height": 400,
+    "data": {
+        "url": "data/epidemic/deaths_state.csv"
+    },
+    "encoding": {"x": {"field": "date", "type": "temporal", "title": "Date"}},
+    "layer": [
+        {
+            "mark": "line",
+            "encoding": {
+                "y": {
+                    "field": "deaths_new",
+                    "type": "quantitative",
+                    "title": "Daily Deaths"
+                },
+                "color": {
+                    "field": "state",
+                    "type": "nominal"
+                },
+                "opacity": {
+                    "condition": {
+                        "param": "state_highlight",
+                        "value": 0.7
+                    },
+                    "value": 0.07
+                },
+                "tooltip": [
+                    {"field": "state", "type": "nominal", "title": "State"},
+                    {"field": "date", "type": "temporal", "title": "Date"},
+                    {"field": "deaths_new", "type": "quantitative", "title": "Deaths"}
+                ]
+            },
+            "params": [
+                {
+                    "name": "state_highlight",
+                    "select": {
+                        "type": "point",
+                        "fields": ["state"]
+                    },
+                    "bind": "legend"
+                }
+            ]
+        },
+        {
+            "transform": [
+                {
+                    "pivot": "state", 
+                    "value": "deaths_new", 
+                    "groupby": ["date"]
+                }
+            ],
+            "mark": "rule",
+            "encoding": {
+                "opacity": {
+                    "condition": {"value": 0.5, "param": "hover", "empty": false},
+                    "value": 0
+                },
+                "tooltip": [
+                    {"field": "date", "type": "temporal", "title": "Date"},
+                    {"field": "Johor", "type": "quantitative"},
+                    {"field": "Kedah", "type": "quantitative"},
+                    {"field": "Kelantan", "type": "quantitative"},
+                    {"field": "Melaka", "type": "quantitative"},
+                    {"field": "Negeri Sembilan", "type": "quantitative"},
+                    {"field": "Pahang", "type": "quantitative"},
+                    {"field": "Perak", "type": "quantitative"},
+                    {"field": "Perlis", "type": "quantitative"},
+                    {"field": "Pulau Pinang", "type": "quantitative"},
+                    {"field": "Sabah", "type": "quantitative"},
+                    {"field": "Sarawak", "type": "quantitative"},
+                    {"field": "Selangor", "type": "quantitative"},
+                    {"field": "Terengganu", "type": "quantitative"},
+                    {"field": "Kuala Lumpur", "type": "quantitative"},
+                    {"field": "Labuan", "type": "quantitative"},
+                    {"field": "Putrajaya", "type": "quantitative"}
+                ]
+            },
+            "params": [
+                {
+                    "name": "hover",
+                    "select": {
+                        "type": "point",
+                        "fields": ["date"],
+                        "nearest": true,
+                        "on": "mouseover",
+                        "clear": "mouseout"
+                    }
+                }
+            ]
+        },
+        {
+            "mark": {
+                "type": "text",
+                "align": "right",
+                "baseline": "middle",
+                "dx": -12,
+                "fontSize": 12,
+                "fontStyle": "italic"
+            },
+            "encoding": {
+                "x": {"field": "date", "type": "temporal"},
+                "y": {"field": "deaths_new", "type": "quantitative"},
+                "text": {"value": "Highest Death"},
+                "color": {"value": "black"},
+                "opacity": {
+                    "condition": {
+                        "test": "datum['deaths_new'] == 359",
+                        "value": 1
+                    },
+                    "value": 0
+                },
+                "tooltip": [
+                    {"field": "state", "type": "nominal", "title": "State"},
+                    {"field": "date", "type": "temporal", "title": "Date"},
+                    {"field": "deaths_new", "type": "quantitative", "title": "Deaths"}
+                ]
+            }
+        }
+    ]
+}
