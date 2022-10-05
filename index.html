@@ -14,10 +14,18 @@
 <body>
 
     <div id="choropleth_map"></div>
+    <div id="linechart"></div>
 
     <script>
         var spec = "js/map.json";
             vegaEmbed('#choropleth_map', spec)
+            .then(function(result) {
+                // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+            })
+            .catch(console.error);
+
+        var spec = "js/linechart.json";
+            vegaEmbed('#linechart', spec)
             .then(function(result) {
                 // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
             })
