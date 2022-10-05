@@ -1,0 +1,5 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": "Malaysia COVID-19 Total Deaths as of 19 September 2022",
+    "width": 800,
+    "height": 400,
